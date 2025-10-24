@@ -4,6 +4,8 @@ import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
 import {error} from "next/dist/build/output/log";
+import SelectField from "@/components/forms/SelectField";
+import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
 
 const SignUp = () => {
     const {
@@ -44,6 +46,7 @@ const SignUp = () => {
                     error={errors.fullName}
                     validation={{ required: "Nama lengkap harus di isi", minLength: 2 }}
                 />
+
                 <InputField
                     name="email"
                     label="Email"
@@ -52,6 +55,7 @@ const SignUp = () => {
                     error={errors.email}
                     validation={{ required: "Email harus di isi", pattern: /^\w+@\w+\.\w+$/, message: "Alamat email harus di isi" }}
                 />
+
                 <InputField
                     name="password"
                     label="Password"
@@ -60,6 +64,38 @@ const SignUp = () => {
                     register={register}
                     error={errors.password}
                     validation={{ required: "Password harus di isi", minLength: 8 }}
+                />
+
+                {/*Country*/}
+
+                <SelectField
+                    name="investmentGoals"
+                    label="Tujuan Investasi"
+                    placeholder="Pilih tujuan investasi Anda"
+                    options={INVESTMENT_GOALS}
+                    control={control}
+                    error={errors.investmentGoals}
+                    required
+                />
+
+                <SelectField
+                    name="riskTolerance"
+                    label="Toleransi Resiko"
+                    placeholder="Pilih tingkat risiko Anda"
+                    options={RISK_TOLERANCE_OPTIONS}
+                    control={control}
+                    error={errors.riskTolerance}
+                    required
+                />
+
+                <SelectField
+                    name="preferredIndustry"
+                    label="Industri Pilihan"
+                    placeholder="Pilih industri pilihan Anda"
+                    options={PREFERRED_INDUSTRIES}
+                    control={control}
+                    error={errors.preferredIndustry}
+                    required
                 />
 
                 <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
