@@ -6,6 +6,7 @@ import InputField from "@/components/forms/InputField";
 import SelectField from "@/components/forms/SelectField";
 import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
 import {CountrySelectField} from "@/components/forms/CountrySelectField";
+import FooterLink from "@/components/forms/FooterLink";
 
 const SignUp = () => {
     const {
@@ -107,6 +108,8 @@ const SignUp = () => {
                 <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
                     {isSubmitting ? "Membuat akun" : "Mulailah Perjalanan Investasi Anda"}
                 </Button>
+
+                <FooterLink text="Sudah punya aku" linkText="Sign In" href="/sign-in" />
             </form>
         </>
     )
