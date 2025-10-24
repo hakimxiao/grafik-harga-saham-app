@@ -3,9 +3,9 @@
 import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
-import {error} from "next/dist/build/output/log";
 import SelectField from "@/components/forms/SelectField";
 import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
+import {CountrySelectField} from "@/components/forms/CountrySelectField";
 
 const SignUp = () => {
     const {
@@ -66,7 +66,13 @@ const SignUp = () => {
                     validation={{ required: "Password harus di isi", minLength: 8 }}
                 />
 
-                {/*Country*/}
+                <CountrySelectField
+                    name="country"
+                    label="Negara"
+                    control={control}
+                    error={errors.country}
+                    required
+                />
 
                 <SelectField
                     name="investmentGoals"
