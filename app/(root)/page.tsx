@@ -8,7 +8,7 @@ import {
 
 const Home = () => {
     // scriptUrl : https://s3.tradingview.com/external-embedding/**kondsional(market-overview.js/widget-mini-symbol-overview.js/dll)**
-    //             Bisa didapat di dokumentasi tepat di bawah widget script : https://www.tradingview.com/widget-docs/
+    //             Bisa didapat di dokumentasi tepat di bawah widget scripts : https://www.tradingview.com/widget-docs/
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
     return (
