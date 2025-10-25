@@ -15,7 +15,7 @@ import { useEffect, useRef } from "react";
  * Dengan hook ini, kamu bisa menampilkan grafik, heatmap, atau data pasar
  * dari TradingView hanya dengan memanggil satu fungsi sederhana.
  *
- * @param scriptUrl - URL dari script TradingView (biasanya dari CDN TradingView)
+ * @param scriptUrl - URL dari scripts TradingView (biasanya dari CDN TradingView)
  * @param config - Objek konfigurasi untuk menentukan jenis widget dan pengaturannya
  * @param height - Tinggi widget dalam pixel (default = 600)
  * @returns containerRef - referensi ke elemen <div> yang akan diisi widget
@@ -39,7 +39,7 @@ const useTradingViewWidget = (
         // 🔒 Jika ref belum terhubung ke elemen <div>, hentikan eksekusi
         if (!containerRef.current) return;
 
-        // 🔁 Cegah script diload dua kali (karena TradingView bisa error kalau dimuat berulang)
+        // 🔁 Cegah scripts diload dua kali (karena TradingView bisa error kalau dimuat berulang)
         // Jadi kalau elemen sudah punya tanda `data-loaded`, fungsi langsung berhenti.
         if (containerRef.current.dataset.loaded) return;
 
@@ -52,21 +52,21 @@ const useTradingViewWidget = (
           </div>
       `;
 
-        // 📜 Membuat elemen <script> baru secara dinamis
-        // TradingView menggunakan script embed, jadi kita buat manual lewat JavaScript
+        // 📜 Membuat elemen <scripts> baru secara dinamis
+        // TradingView menggunakan scripts embed, jadi kita buat manual lewat JavaScript
         const script = document.createElement("script");
 
-        // URL script TradingView, misalnya: "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
+        // URL scripts TradingView, misalnya: "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
         script.src = scriptUrl;
 
-        // Jalankan script secara asynchronous agar tidak menghambat rendering halaman
+        // Jalankan scripts secara asynchronous agar tidak menghambat rendering halaman
         script.async = true;
 
-        // 🧩 Isi script dengan konfigurasi TradingView dalam format JSON string
+        // 🧩 Isi scripts dengan konfigurasi TradingView dalam format JSON string
         // Misalnya config berisi pengaturan: colorTheme, locale, symbol, dll.
         script.innerHTML = JSON.stringify(config);
 
-        // 📥 Tambahkan script yang sudah disiapkan ke dalam container <div>
+        // 📥 Tambahkan scripts yang sudah disiapkan ke dalam container <div>
         // Setelah ini, TradingView otomatis akan memproses dan menampilkan grafiknya
         containerRef.current.appendChild(script);
 
