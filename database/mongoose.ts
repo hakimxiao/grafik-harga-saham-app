@@ -31,5 +31,7 @@ export const connectToDatabase = async () => {
         throw err;
     }
 
-    console.log(`Berhasil terhubung didatabase ${process.env.NODE_ENV} - ${MONGODB_URI}`)
+    console.log(`Berhasil terhubung didatabase ${process.env.NODE_ENV} - ${MONGODB_URI}`);
+
+    return cached.conn;
 }
