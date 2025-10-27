@@ -1,7 +1,7 @@
 import {inngest} from "@/lib/inngest/client";
-import {signUpEmail} from "better-auth/api";
 import {PERSONALIZED_WELCOME_EMAIL_PROMPT} from "@/lib/inngest/prompts";
 import {sendWelcomeEmail} from "@/lib/nodemailer";
+import {getAllUsersForNewsEmail} from "@/lib/actions/user.action";
 
 export const sendSignUpEmail = inngest.createFunction(
     { id: "sign-up-email" },
@@ -42,5 +42,15 @@ export const sendSignUpEmail = inngest.createFunction(
             success: true,
             message: "Email selamat datang berhasil dikirim.",
         }
+    }
+)
+
+export const sendDailyNewsSummary = inngest.createFunction(
+    { id: "daily-news-summary" },
+    [ { event: "app/send.daily.news" }, { cron: "0 12 * * *" }],
+    async ({ step }) => {
+        // step #1 : Dapatkan semua pengguna untuk pengiriman berita
+        const users = await step.run("get-all-users", getAllUsersForNewsEmail)
+        if(!users || users.length === 0) return { success: false, message: "Tidak ada pengguna yang ditemukan untuk email berita." };
     }
 )
