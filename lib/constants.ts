@@ -1,7 +1,7 @@
 export const NAV_ITEMS = [
     { href: '/', label: 'Beranda' },
     { href: '/search', label: 'Pencarian' },
-    // { href: '/watchlist', label: 'Daftar Pantauan' },
+    { href: '/watchlist', label: 'Daftar Pantauan' },
 ];
 
 // Pilihan tujuan investasi (untuk form pendaftaran)

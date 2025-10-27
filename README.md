@@ -1,5 +1,7 @@
 # AI STUDIO
 -- PAKAI AKUN UCOK PAKPAHAN
+# MONGODB ATLAS 
+-- pakai akun fhkim
 
 # INNGEST CLI COMMAND 
 -- npx inngest-cli@latest dev
