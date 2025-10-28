@@ -1,164 +1,156 @@
 # 🤖 AI STOCK MARKET APP
 
----
-
-## 🧍 Account Information
-
-### 🧠 AI STUDIO (GEMINI)  
--- Pakai akun **Ucok Pakpahan**
-
-### 🍃 MONGODB ATLAS  
--- Pakai akun **fhkim**
+Aplikasi **AI Stock Market** ini merupakan proyek berbasis **Node.js + TypeScript** yang mengintegrasikan beberapa layanan utama:  
+**AI (Gemini Studio)**, **database cloud (MongoDB Atlas)**, **sistem event (Inngest)**, **pengiriman email (Nodemailer)**, dan **API pasar saham (Finnhub)**.  
+Tujuan aplikasi ini adalah untuk memberikan **prediksi, notifikasi, dan ringkasan pasar saham otomatis** dengan bantuan AI dan event scheduler.
 
 ---
 
-## ⚙️ INNGEST CLI COMMAND  
--- Jalankan perintah berikut untuk menjalankan Inngest secara lokal:
+## 🧠 AI STUDIO (GEMINI)
+
+**Akun digunakan:** Ucok Pakpahan
+
+### 🧩 Peran:
+Gemini digunakan untuk menghasilkan analisis dan konten AI seperti:
+- Prediksi tren saham.
+- Ringkasan berita pasar harian.
+- Rekomendasi personal berdasarkan profil pengguna.
+
+### 🔗 Integrasi:
+Aplikasi memanggil Gemini melalui **API key** yang tersimpan aman di variabel lingkungan (environment variables).
+
+### 💬 Catatan Prompt:
+Semua prompt ditulis dalam **bahasa Inggris**, namun diarahkan agar **output dihasilkan dalam bahasa Indonesia** sesuai gaya profesional dan komunikatif.
+
+---
+
+## 🍃 MONGODB ATLAS
+
+**Akun digunakan:** fhkim
+
+### 🧩 Peran:
+MongoDB Atlas digunakan sebagai **database utama** untuk menyimpan:
+- Data pengguna (`users`)
+- Riwayat analisis dan prediksi saham
+- Log aktivitas dan event
+
+### 🔗 Koneksi:
+Menggunakan **Mongoose (ODM)** dengan struktur modular melalui `connectToDatabase()` untuk koneksi aman dan efisien.
+
+### 💡 Contoh Query Penting:
+```js
+const users = await db.collection("users").find(
+  { email: { $exists: true, $ne: null } },
+  { projection: { _id: 1, id: 1, email: 1, name: 1, country: 1 } }
+).toArray();
+```
+➤ Artinya: ambil semua pengguna yang memiliki email valid dan tampilkan hanya field penting seperti _id, id, email, name, dan country.
+
+#### ⚙️ INNGEST (EVENT & CRON SYSTEM)
+💻 CLI Command untuk menjalankan secara lokal:
 ```bash
+Copy code
 npx inngest-cli@latest dev
-````
+```
+#### 🧩 Peran:
+Inngest digunakan untuk:
+- Menjalankan background task berbasis event (misalnya saat pengguna baru mendaftar).
+- Menjadwalkan tugas otomatis, seperti:
+- Pengiriman ringkasan berita harian.
+- Update data saham dari API setiap jam.
+- Menangani retry otomatis jika fungsi gagal dijalankan.
 
----
+#### 💡 Contoh Cron Function:
+```js
+Copy code
+export const sendDailyNewsSummary = inngest.createFunction(
+  { id: "daily-news-summary" },
+  { cron: "0 12 * * *" }, // setiap jam 12:00 UTC
+  async () => {
+    console.log("Menjalankan ringkasan berita harian...");
+    await sendDailyEmailToAllUsers();
+  }
+);
+```
+➤ Cron ini berjalan otomatis setiap hari untuk mengirim email ringkasan pasar saham.
 
-## 📬 NODEMAILER INSTALLATION
+## 💹 FINNHUB API (STOCK MARKET DATA)
+#### 🧩 Peran:
+Finnhub menyediakan data pasar saham real-time dan historis, seperti:
+- Harga saham terkini (real-time quotes)
+- Data perusahaan
+- Berita keuangan terkini
+- Indikator teknikal
 
--- Install Nodemailer dan tipe datanya:
+#### 💡 Contoh Penggunaan API:
+```js
+Copy code
+const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=AAPL&token=${process.env.FINNHUB_API_KEY}`);
+const data = await response.json();
+console.log(data);
+```
+➤ Data ini digunakan oleh AI (Gemini) untuk melakukan analisis dan menghasilkan rekomendasi investasi yang cerdas.
 
+### 📬 NODEMAILER (EMAIL DELIVERY SYSTEM)
+#### ⚙️ Instalasi:
 ```bash
 npm install nodemailer
 npm i --save-dev @types/nodemailer
 ```
+#### 🔑 Konfigurasi Environment:
+NODEMAILER_EMAIL=youremail@gmail.com
+NODEMAILER_PASSWORD=your_app_password <br>
+🔗 Buat App Password di: <br>
+👉 https://myaccount.google.com/apppasswords
 
----
+#### 🧩 Peran:
+Nodemailer digunakan untuk mengirimkan:
+ - Email verifikasi pengguna.
+ - Laporan harian dari Inngest.
+ - Hasil analisis AI ke pengguna yang berlangganan.
 
-## 🔑 NODEMAILER REQUIREMENT
-
-Pastikan kamu sudah menyiapkan kredensial berikut:
-
+#### 💡 Contoh Penggunaan:
 ```
-NODEMAILER_EMAIL=   by Google account (aktifkan 2-step verification)
-NODEMAILER_PASSWORD=    by creating an App Password di link berikut:
-```
-
-👉 [https://myaccount.google.com/apppasswords?pli=1](https://myaccount.google.com/apppasswords?pli=1)
-
----
-
-## 🧾 INFORMATION
-
-### INFO FOR : 1***
-
-### 📍 Konteks Umum
-
-Kode ini menggunakan **MongoDB Native Driver** (melalui koneksi Mongoose) untuk mengambil data dari koleksi (collection) bernama **`users`**.
-
-Urutan proses:
-
-1. Terkoneksi ke database (`connectToDatabase()`).
-2. Ambil referensi ke database aktif (`mongoose.connection.db`).
-3. Akses koleksi `users`.
-4. Lakukan pencarian dengan `.find(...)`.
-5. Hasilnya dikonversi ke array dengan `.toArray()` agar bisa diproses lebih lanjut di JavaScript.
-
----
-
-### 💡 Bagian Penting: `.find(filter, options)`
-
-Fungsi `.find()` di MongoDB menerima dua parameter utama:
-
-```js
-.find(filter, options)
-```
-
-1. **`filter`** → menentukan *kriteria dokumen mana yang mau diambil*.
-2. **`options`** → menentukan *apa yang mau ditampilkan atau disembunyikan* dari hasil pencarian.
-
----
-
-### 🔍 Penjelasan Detail
-
-#### 1️⃣ Filter (parameter pertama)
-
-```js
-{ email: { $exists: true, $ne: null } }
-```
-
-Artinya:
-
-* `email` harus **ada** di dokumen (`$exists: true`).
-* dan **tidak boleh bernilai null** (`$ne: null` → *not equal to null*).
-
-👉 Query ini akan mengambil **semua user yang memiliki email valid (tidak kosong/null)**.
-
----
-
-#### 2️⃣ Options / Projection (parameter kedua)
-
-```js
-{ projection: { _id: 1, id: 1, email: 1, name: 1, country: 1 } }
-```
-
-Artinya:
-
-* Hanya kolom (field) tertentu yang akan ditampilkan dalam hasil query.
-* Angka `1` artinya **tampilkan field ini**.
-  (Kalau `0`, berarti **sembunyikan field ini**.)
-
-Jadi hasil yang diambil hanya berisi:
-
-```js
-{
-  _id,
-  id,
-  email,
-  name,
-  country
-}
-```
-
-Field lain di dokumen `users` tidak akan ikut dikembalikan.
-
----
-
-### 🧠 Kesimpulan Singkat
-
-Kode ini artinya:
-
-> Ambil semua dokumen dari koleksi `users` yang memiliki field `email` (dan nilainya bukan `null`), lalu tampilkan hanya field `_id`, `id`, `email`, `name`, dan `country`.
-
----
-
-### 📦 Contoh Hasil (`console.log(users)`)
-
-Misalnya di database ada data seperti ini:
-
-```js
-{
-  _id: ObjectId("..."),
-  id: 1,
-  email: "abbu@example.com",
-  name: "Abbu Solihin",
-  country: "Indonesia",
-  password: "123456",    // field ini tidak ditampilkan
-  role: "admin"          // field ini juga tidak ditampilkan
-}
-```
-
-Maka hasil `.find()` di atas hanya mengembalikan:
-
-```js
-[
-  {
-    _id: ObjectId("..."),
-    id: 1,
-    email: "abbu@example.com",
-    name: "Abbu Solihin",
-    country: "Indonesia"
+Copy code
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.NODEMAILER_EMAIL,
+    pass: process.env.NODEMAILER_PASSWORD
   }
-]
+});
+
+await transporter.sendMail({
+  from: process.env.NODEMAILER_EMAIL,
+  to: user.email,
+  subject: "Laporan Harian Saham",
+  html: "<p>Ringkasan pasar saham hari ini...</p>"
+});
+
 ```
+## 🧾 Komit Penting (Commit Notes)
+
+Beberapa commit yang tergolong penting dan perlu dicatat dalam dokumentasi proyek:
+
+| **Commit**                     | **Deskripsi Singkat**                                                                                                  |
+|--------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| **Utility Functions & Core Logic** | Menambahkan fungsi-fungsi inti dan utilitas untuk mengatur logika AI, data pengguna, serta event utama aplikasi.     |
+| **Inngest Integration**         | Menyambungkan sistem event & cron ke dalam aplikasi utama untuk menjalankan tugas terjadwal secara otomatis.          |
+| **Nodemailer Setup**            | Mengatur sistem pengiriman email beserta konfigurasi environment agar mendukung pengiriman notifikasi dinamis.        |
+| **AI Prompt Personalization**   | Menambahkan prompt dinamis untuk AI agar dapat menghasilkan output yang dipersonalisasi berdasarkan profil pengguna. |
+| **Database Query Optimization** | Mengoptimalkan query MongoDB menggunakan projection dan filter yang efisien untuk meningkatkan performa aplikasi.    |
+
+#### 🧭 ALUR KERJA SISTEM
+- User mendaftar → data disimpan di MongoDB.
+- Inngest memicu event user/created → fungsi AI menulis pesan sambutan lewat email (Nodemailer).
+- Setiap hari (Cron) → Inngest menjalankan tugas harian untuk mengambil data saham dari Finnhub.
+- Gemini AI menganalisis data dan membuat laporan berbahasa Indonesia.
+- Nodemailer mengirim laporan ke semua pengguna aktif.
+
+#### 🚀 TUJUAN UTAMA
+- Menciptakan sistem otomatis, cerdas, dan aman untuk:
+- Analisis saham harian berbasis AI.
+- Notifikasi dan laporan email real-time.
+- Pengelolaan pengguna terintegrasi.
 
 ---
-
-✨ **Catatan:**
-Jika hanya ingin mengambil satu dokumen, gunakan `.findOne(filter, options)` tanpa `.toArray()`.
