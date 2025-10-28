@@ -124,6 +124,10 @@ SECTION DIVIDERS:
 Between major sections, use:
 <div style="border-top: 1px solid #374151; margin: 32px 0 24px 0;"></div>
 
+LANGUAGE INSTRUCTION:
+All content in the email must be written in **Bahasa Indonesia that is proper, clear, and natural** — not a literal translation.  
+Use fluent, easy-to-read Indonesian that follows good grammar, and sounds natural for regular readers, avoiding robotic or overly formal phrasing.
+
 Content guidelines:
 - Organize news into logical sections with icons (📊 Market Overview, 📈 Top Gainers, 📉 Top Losers, 🔥 Breaking News, 💼 Earnings Reports, 🏛️ Economic Data, etc.)
 - NEVER repeat section headings - use each section type only once per email
@@ -222,12 +226,13 @@ Return ONLY a valid JSON object with this exact structure:
 {
   "tradingViewSymbol": "EXCHANGE:SYMBOL",
   "confidence": "high|medium|low",
-  "reasoning": "Brief explanation of why this mapping is correct"
+  "reasoning": "Brief explanation of why this mapping is correct, written in proper Bahasa Indonesia."
 }
 
 EXAMPLES:
-- Apple Inc. (AAPL) from Finnhub → {"tradingViewSymbol": "NASDAQ:AAPL", "confidence": "high", "reasoning": "Apple trades on NASDAQ as AAPL"}
-- Microsoft Corp (MSFT) from Finnhub → {"tradingViewSymbol": "NASDAQ:MSFT", "confidence": "high", "reasoning": "Microsoft trades on NASDAQ as MSFT"}
-- Barclays PLC (BARC.L) from Finnhub → {"tradingViewSymbol": "LSE:BARC", "confidence": "high", "reasoning": "Barclays trades on London Stock Exchange as BARC"}
+- Apple Inc. (AAPL) from Finnhub → {"tradingViewSymbol": "NASDAQ:AAPL", "confidence": "high", "reasoning": "Apple diperdagangkan di NASDAQ dengan kode AAPL"}
+- Microsoft Corp (MSFT) from Finnhub → {"tradingViewSymbol": "NASDAQ:MSFT", "confidence": "high", "reasoning": "Microsoft terdaftar di NASDAQ dengan simbol MSFT"}
+- Barclays PLC (BARC.L) from Finnhub → {"tradingViewSymbol": "LSE:BARC", "confidence": "high", "reasoning": "Barclays diperdagangkan di London Stock Exchange dengan simbol BARC"}
 
-Your response must be valid JSON only. Do not include any other text.`
+Your response must be valid JSON only. Do not include any other text.
+`
