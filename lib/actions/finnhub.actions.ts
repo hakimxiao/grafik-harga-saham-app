@@ -1,16 +1,16 @@
 'use server';
 
-import { getDateRange, validateArticle, formatArticle } from '@/lib/utils';
-import { POPULAR_STOCK_SYMBOLS } from '@/lib/constants';
-import { cache } from 'react';
+import {getDateRange, validateArticle, formatArticle} from '@/lib/utils';
+import {POPULAR_STOCK_SYMBOLS} from '@/lib/constants';
+import {cache} from 'react';
 
 const FINNHUB_BASE_URL = 'https://finnhub.io/api/v1';
 const NEXT_PUBLIC_FINNHUB_API_KEY = process.env.NEXT_PUBLIC_FINNHUB_API_KEY ?? '';
 
 async function fetchJSON<T>(url: string, revalidateSeconds?: number): Promise<T> {
     const options: RequestInit & { next?: { revalidate?: number } } = revalidateSeconds
-        ? { cache: 'force-cache', next: { revalidate: revalidateSeconds } }
-        : { cache: 'no-store' };
+        ? {cache: 'force-cache', next: {revalidate: revalidateSeconds}}
+        : {cache: 'no-store'};
 
     const res = await fetch(url, options);
     if (!res.ok) {
@@ -20,7 +20,7 @@ async function fetchJSON<T>(url: string, revalidateSeconds?: number): Promise<T>
     return (await res.json()) as T;
 }
 
-export { fetchJSON };
+export {fetchJSON};
 
 export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> {
     try {
@@ -102,7 +102,7 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
     try {
         const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
         if (!token) {
-            // If no token, log and return empty to avoid throwing per requirements
+            // Jika tidak ada token, catat dan kembalikan dalam keadaan kosong untuk menghindari pelemparan sesuai persyaratan
             console.error('Error in stock search:', new Error('FINNHUB API key is not configured'));
             return [];
         }
@@ -112,7 +112,7 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
         let results: FinnhubSearchResult[] = [];
 
         if (!trimmed) {
-            // Fetch top 10 popular symbols' profiles
+            // Ambil 10 profil simbol populer teratas
             const top = POPULAR_STOCK_SYMBOLS.slice(0, 10);
             const profiles = await Promise.all(
                 top.map(async (sym) => {
@@ -120,16 +120,16 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
                         const url = `${FINNHUB_BASE_URL}/stock/profile2?symbol=${encodeURIComponent(sym)}&token=${token}`;
                         // Revalidate every hour
                         const profile = await fetchJSON<any>(url, 3600);
-                        return { sym, profile } as { sym: string; profile: any };
+                        return {sym, profile} as { sym: string; profile: any };
                     } catch (e) {
                         console.error('Error fetching profile2 for', sym, e);
-                        return { sym, profile: null } as { sym: string; profile: any };
+                        return {sym, profile: null} as { sym: string; profile: any };
                     }
                 })
             );
 
             results = profiles
-                .map(({ sym, profile }) => {
+                .map(({sym, profile}) => {
                     const symbol = sym.toUpperCase();
                     const name: string | undefined = profile?.name || profile?.ticker || undefined;
                     const exchange: string | undefined = profile?.exchange || undefined;

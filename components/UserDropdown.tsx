@@ -12,14 +12,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {LogOut} from "lucide-react";
-import {signOut} from "@/lib/actions/auth-actions";
+import NavItems from "@/components/NavItems";
+import {signOut} from "@/lib/actions/auth.actions";
 
-const UserDropdown = ({ user }: {user: User,}) => {
+const UserDropdown = ({ user, initialStocks }: {user: User, initialStocks: StockWithWatchlistStatus[]}) => {
     const router = useRouter();
 
     const handleSignOut = async () => {
         await signOut();
-        router.push('/sign-in');
+        router.push("/sign-in");
     }
 
     return (
@@ -61,6 +62,10 @@ const UserDropdown = ({ user }: {user: User,}) => {
                     <LogOut className="h-4 w-4 mr-2 hidden sm:block" />
                     Logout
                 </DropdownMenuItem>
+                <DropdownMenuSeparator className="hidden sm:block bg-gray-600"/>
+                <nav className="sm:hidden">
+                    <NavItems initialStocks={initialStocks} />
+                </nav>
             </DropdownMenuContent>
         </DropdownMenu>
     )
