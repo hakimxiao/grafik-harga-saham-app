@@ -1,5 +1,7 @@
 # 🤖 AI STOCK MARKET APP
 
+#### https://jsmastery.com/video-kit/7df14775-f594-4367-9941-9abce7d82de2?utm_source=youtube&utm_campaign=stocks-inngest
+
 Aplikasi **AI Stock Market** ini merupakan proyek berbasis **Node.js + TypeScript** yang mengintegrasikan beberapa layanan utama:  
 **AI (Gemini Studio)**, **database cloud (MongoDB Atlas)**, **sistem event (Inngest)**, **pengiriman email (Nodemailer)**, dan **API pasar saham (Finnhub)**.  
 Tujuan aplikasi ini adalah untuk memberikan **prediksi, notifikasi, dan ringkasan pasar saham otomatis** dengan bantuan AI dan event scheduler.
