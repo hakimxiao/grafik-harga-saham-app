@@ -155,22 +155,31 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
 
         const mapped: StockWithWatchlistStatus[] = results
             .map((r) => {
+                // Simbol asli dari Finnhub (contoh: PGEO.JK, 7203.T)
                 const upper = (r.symbol || '').toUpperCase();
-                const name = r.description || upper;
+
+                // Normalisasi: hapus ekstensi seperti .JK, .US, .T, dll
+                const normalizedSymbol = upper.replace(/\.[A-Z]+$/, '');
+
+                const name = r.description || normalizedSymbol;
                 const exchangeFromDisplay = (r.displaySymbol as string | undefined) || undefined;
                 const exchangeFromProfile = (r as any).__exchange as string | undefined;
                 const exchange = exchangeFromDisplay || exchangeFromProfile || 'US';
                 const type = r.type || 'Stock';
+
                 const item: StockWithWatchlistStatus = {
-                    symbol: upper,
+                    symbol: normalizedSymbol,  // ini yang dipakai TradingView
+                    originalSymbol: upper,     // ini untuk key unik di React
                     name,
                     exchange,
                     type,
                     isInWatchlist: false,
                 };
+
                 return item;
             })
             .slice(0, 15);
+
 
         return mapped;
     } catch (err) {

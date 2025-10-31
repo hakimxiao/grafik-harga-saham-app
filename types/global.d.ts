@@ -82,6 +82,7 @@ declare global {
 
     type StockWithWatchlistStatus = Stock & {
         isInWatchlist: boolean;
+        originalSymbol?: string;
     };
 
     type FinnhubSearchResult = {

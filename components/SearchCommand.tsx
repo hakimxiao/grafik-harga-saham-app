@@ -8,7 +8,7 @@ import {
     CommandEmpty,
 } from "@/components/ui/command"
 import {Button} from "@/components/ui/button";
-import {Loader2, TrendingUp} from "lucide-react";
+import {Loader2, Star, TrendingUp} from "lucide-react";
 import Link from "next/link";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
 import {useDebounce} from "@/hooks/useDebounce";
@@ -96,7 +96,7 @@ export default function SearchCommand({
                                 ({displayStocks?.length || 0})
                             </div>
                             {displayStocks?.map((stock, i) => (
-                                <li key={stock.symbol} className="search-item">
+                                <li key={`${stock.symbol}-${stock.exchange}-${i}`} className="search-item">
                                     <Link
                                         href={`/stocks/${stock.symbol}`}
                                         onClick={handleSelectStock}
@@ -111,6 +111,8 @@ export default function SearchCommand({
                                                 {stock.symbol} | {stock.exchange} | {stock.type}
                                             </div>
                                         </div>
+                                    {/*<Star />*/}
+
                                     </Link>
                                 </li>
                             ))}
